@@ -19,12 +19,13 @@
                             <field name="catidad"></field>
                             <field name="amount"></field>
                         </group>
+                        <group>
                             <field name="payment_date"></field>
                             <field name="communication"></field>
                             <field name="payment_method_line_id"></field>
-                        <group>
                         </group>
                     </group>
+                    
                 </sheet>
             </form>
         </field>

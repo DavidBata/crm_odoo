@@ -39,7 +39,7 @@
             <xpath expr="//div[@id='probability']" position="before">
                 <div id="commission" class="d-inline-block">
                     <label for='commission'>Comicion</label>
-                    <field name="commission" widget="float" class="oe_inline o_input_6ch"/>
+                    <field name="commission" widget="monetary" options="{'currency_field': 'company_currency'}" class="oe_inline o_input_6ch"/>
                 </div>
             </xpath>
         </field>
@@ -52,7 +52,7 @@
         <field name="inherit_id" ref="crm.crm_lead_view_list_activities"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='expected_revenue']" position="after">
-                <field name="commission" widget="float" options="{'no_create_edit': True}"/>
+                <field name="commission" widget="monetary"  options="{'no_create_edit': True,'currency_field': 'company_currency'}"/>
             </xpath>
         </field>
     </record>

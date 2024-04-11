@@ -17,13 +17,28 @@ class AccountsPayableCrm(models.Model):
         related='oprtunity_id.contact_name'
     )
     commission = fields.Float(
-        related='oprtunity_id.commission'
+        string="Comicion",
+        compute = '_compute_commission'
+        # related='oprtunity_id.commission',
+    )
+
+    
+    
+    company_id = fields.Many2one(
+        string='Company', 
+        comodel_name='res.company', 
+        default=lambda self: self.env.user.company_id
     )
     
     state = fields.Selection(
         string='state',
         selection=[('no_payment', 'No Pagado'), ('payment', 'Pagado')],
         default="no_payment"
+    )
+
+    total_amount = fields.Float(
+        string='Total Pagado',
+        compute = '_compute_total_amount'
     )
     
     account_payment_commission_ids = fields.One2many('account.payment.register.commission', 'accounts_payable_crm_id', string='Pagos de comicion')
@@ -39,12 +54,21 @@ class AccountsPayableCrm(models.Model):
             'name': _('Registar Pago Comicion'),
             'res_model': 'account.payment.register.commission',
             'view_mode': 'form',
-            # 'context': {
-            #     'active_model': 'accounts.payable.crm',
-            #     'active_ids': self.ids,
-            # },
+            'context': {
+                'active_model': 'accounts.payable.crm',
+                'active_ids': self.ids,
+            },
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
+    def _compute_commission(self):
+        for rec in self:
+            rec.commission= float(rec.oprtunity_id.commission)
     
+    
+    def _compute_total_amount(self):
+        object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.id)])
+        total_importe = sum(map(lambda p: p.amount, object))
+        self.total_amount = total_importe if total_importe else 0.0
+
     

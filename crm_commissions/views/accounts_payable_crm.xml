@@ -22,7 +22,8 @@
             <tree string="Cuentas por pagar">
                 <field name="oprtunity_id"></field>
                 <field name="contact_name"></field>
-                <field name="commission"></field>
+                <field name="commission" widget="monetary"  ></field>
+                <field name="total_amount"/>
                 <field name="state"></field>
             </tree>
         </field>
@@ -48,9 +49,30 @@
                             
                         </group>
                         <group>
-                            <field name="commission"></field>
+                            <field name="commission" widget="monetary"  ></field>
                         </group>
                     </group>
+                    <notebook>
+                        <page name="payment_register" string="Pagos Registrados">
+                            <field name="account_payment_commission_ids">
+                                <tree string="Pagos Realizados">
+                                    <field name="accounts_payable_crm_id" />
+                                    <field name="catidad" />
+                                    <field name="amount" />
+                                    <field name="payment_date" />
+                                    <field name="communication" />
+                                    <field name="payment_method_line_id" />
+                                </tree>
+                                
+                            </field>
+                            <div id="total_ammount">
+                                <h5>
+                                    <label for='total_amount'>Total Pagado :</label>
+                                    <field name="total_amount"/>
+                                </h5>
+                            </div>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>

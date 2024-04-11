@@ -37,6 +37,11 @@ class AccountsPaymenteRegisterCrm(models.Model):
         comodel_name='account.payment.method.line',
         ondelete='restrict',
     )
-    
 
-    
+    @api.onchange('accounts_payable_crm_id')
+    def _onchange_importe_total(self):
+        if self.accounts_payable_crm_id:
+            object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.accounts_payable_crm_id.id)])
+            total_importe = sum(map(lambda p: p.amount, object))
+
+            self.amount = (self.accounts_payable_crm_id.commission - total_importe) if total_importe else self.accounts_payable_crm_id.commission
