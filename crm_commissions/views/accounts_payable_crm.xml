@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acconts_payable_crm_acction_window" model="ir.actions.act_window">
+        <field name="name">Cuentas Por Pagar</field>
+        <field name="res_model">accounts.payable.crm</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="arch" type="xml"></field> -->
+    </record>
+
+    <menuitem
+        id="acconts_payable_crm_acction_menu"
+        name="Cuenta por Pagar"
+        action="crm_commissions.acconts_payable_crm_acction_window"
+        parent="crm.crm_menu_sales"
+        sequence="10"/>
+
+    <record id="acconts_payable_crm_view_tree" model="ir.ui.view">
+        <field name="name">acconts.payable.crm.view.tree</field>
+        <field name="model">accounts.payable.crm</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Cuentas por pagar">
+                <field name="oprtunity_id"></field>
+                <field name="contact_name"></field>
+                <field name="commission"></field>
+                <field name="state"></field>
+            </tree>
+        </field>
+    </record>
+    <record id="acconts_payable_crm_view_form" model="ir.ui.view">
+        <field name="name">acconts.payable.crm.view.form</field>
+        <field name="model">accounts.payable.crm</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header>
+                    <field name="state" 
+                    widget="statusbar"
+                    ></field>
+                    <button string="Registrar Pago" name="action_register_payment_crm" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="oprtunity_id"></field>
+                            <field name="contact_name"></field>
+                            
+                            
+                        </group>
+                        <group>
+                            <field name="commission"></field>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+</odoo>
