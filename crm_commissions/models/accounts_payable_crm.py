@@ -12,17 +12,21 @@ class AccountsPayableCrm(models.Model):
         comodel_name='crm.lead',
         ondelete='restrict',
     )
+
+    
+
     contact_name = fields.Char(
         string='Nombre del Contacto',
         related='oprtunity_id.contact_name'
     )
+
+
     commission = fields.Float(
         string="Comicion",
-        compute = '_compute_commission'
-        # related='oprtunity_id.commission',
+        related='oprtunity_id.commission'
     )
-
     
+    company_currency = fields.Many2one("res.currency", string='Currency',compute_sudo=True, compute="_compute_company_currency" )
     
     company_id = fields.Many2one(
         string='Company', 
@@ -46,29 +50,57 @@ class AccountsPayableCrm(models.Model):
     # order_ids = fields.One2many(
     #     related='oprtunity_id.order_ids'
     # )
+
     def action_register_payment_crm(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
         :return: An action opening the account.payment.register wizard.
         '''
+        # object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.id)])
+        if self.total_amount >= self.commission:
+
+            raise ValidationError("No puedes relaizar mas pagos a esta comisión")
+
+
         return {
             'name': _('Registar Pago Comicion'),
             'res_model': 'account.payment.register.commission',
             'view_mode': 'form',
             'context': {
-                'active_model': 'accounts.payable.crm',
-                'active_ids': self.ids,
+                'default_accounts_payable_crm_id': self.id
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
-    def _compute_commission(self):
-        for rec in self:
-            rec.commission= float(rec.oprtunity_id.commission)
-    
     
     def _compute_total_amount(self):
-        object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.id)])
-        total_importe = sum(map(lambda p: p.amount, object))
-        self.total_amount = total_importe if total_importe else 0.0
 
+        for rec in self:
+            object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', rec.id)])
+            total_importe = sum(map(lambda p: p.amount, object))
+            rec.sudo().write({
+                    'total_amount':total_importe if total_importe else 0.0
+                })
+            if rec.total_amount == rec.commission:
+                rec.sudo().write({
+                    'state': 'payment'
+                })
+            else:
+                rec.sudo().write({
+                    'state': 'no_payment'
+                })
     
+    def _compute_currency_id(self):
+        for rec in self:
+            rec.sudo().write({
+            'currency_id': self.env.company.currency_id.id 
+            }) 
+                
+
+
+    @api.depends('company_id')
+    def _compute_company_currency(self):
+        for rec in self:
+            if not rec.company_id:
+                rec.company_currency = rec.env.company.currency_id
+            else:
+                rec.company_currency = rec.company_id.currency_id

@@ -12,7 +12,14 @@ class AccountsPaymenteRegisterCrm(models.Model):
         ondelete='restrict',
     )
 
-    
+
+    company_id = fields.Many2one(
+        string='Company', 
+        comodel_name='res.company', 
+        required=True, 
+        default=lambda self: self.env.user.company_id
+    )
+    company_currency = fields.Many2one("res.currency", string='Currency',compute_sudo=True, compute="_compute_company_currency" )
     catidad = fields.Float(
         string='Catidad a Pagar',
     )
@@ -43,5 +50,18 @@ class AccountsPaymenteRegisterCrm(models.Model):
         if self.accounts_payable_crm_id:
             object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.accounts_payable_crm_id.id)])
             total_importe = sum(map(lambda p: p.amount, object))
-
-            self.amount = (self.accounts_payable_crm_id.commission - total_importe) if total_importe else self.accounts_payable_crm_id.commission
+            self.catidad = (self.accounts_payable_crm_id.commission - total_importe) if total_importe else self.accounts_payable_crm_id.commission
+    
+    
+  
+    
+    
+    @api.depends('company_id')
+    def _compute_company_currency(self):
+        for rec in self:
+            if not rec.company_id:
+                rec.company_currency = rec.env.company.currency_id
+            else:
+                rec.company_currency = rec.company_id.currency_id
+    
+    

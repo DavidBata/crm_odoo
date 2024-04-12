@@ -6,16 +6,22 @@ from odoo.exceptions import ValidationError
 class CrmLeadIherit(models.Model):
     _inherit = 'crm.lead'
 
-    
-    commission = fields.Monetary('Compicion', currency_field='company_currency', tracking=True)
-   
+    commission = fields.Float('Comisión', tracking=True)
+
+
     accounts_payable_crm_ids = fields.One2many(
         string='Cuentas por pagar',
         comodel_name='accounts.payable.crm',
         inverse_name='oprtunity_id',
     )
     
-
+    company_id = fields.Many2one(
+        string='Company', 
+        comodel_name='res.company', 
+        required=True, 
+        default=lambda self: self.env.user.company_id
+    )
+    
     def action_set_won_rainbowman(self):
         self.register_account_payable()
         self.ensure_one()

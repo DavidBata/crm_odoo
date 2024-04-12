@@ -43,8 +43,6 @@
                 </div>
             </xpath>
         </field>
-
-
     </record>
     <record id="inherit_crm_lead_tree" model="ir.ui.view">
         <field name="name">inherit.crm.lead.tree</field>

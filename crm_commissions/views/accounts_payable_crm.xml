@@ -22,7 +22,8 @@
             <tree string="Cuentas por pagar">
                 <field name="oprtunity_id"></field>
                 <field name="contact_name"></field>
-                <field name="commission" widget="monetary"  ></field>
+                <field name="commission" widget="monetary" options="{'currency_field': 'company_currency'}"></field>
+                <field name="company_currency" invisible="1"/>
                 <field name="total_amount"/>
                 <field name="state"></field>
             </tree>
@@ -43,22 +44,26 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="company_currency" invisible="1"/>
                             <field name="oprtunity_id"></field>
                             <field name="contact_name"></field>
-                            
-                            
                         </group>
                         <group>
-                            <field name="commission" widget="monetary"  ></field>
+                            <field name="commission"  widget="monetary" options="{'currency_field': 'company_currency'}"></field>
                         </group>
                     </group>
                     <notebook>
                         <page name="payment_register" string="Pagos Registrados">
-                            <field name="account_payment_commission_ids">
+                            <field name="account_payment_commission_ids" 
+                            readonly="1"
+                              options="{'no_create': True, 'no_edit': True, 'no_open': True,'create': False}">
+                              
+                                
                                 <tree string="Pagos Realizados">
                                     <field name="accounts_payable_crm_id" />
-                                    <field name="catidad" />
-                                    <field name="amount" />
+                                    <field name="company_currency" invisible="1"></field>
+                                    <field name="catidad"  widget="monetary" options="{'currency_field': 'company_currency'}" />
+                                    <field name="amount"  widget="monetary" options="{'currency_field': 'company_currency'}" />
                                     <field name="payment_date" />
                                     <field name="communication" />
                                     <field name="payment_method_line_id" />
