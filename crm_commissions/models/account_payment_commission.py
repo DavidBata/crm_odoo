@@ -100,3 +100,4 @@ class AccountsPaymenteRegisterCrm(models.Model):
             vals["name"] = self.env["ir.sequence"].next_by_code(sequence_code_commission)
             return super(AccountsPaymenteRegisterCrm, self).create(vals)
 
+    

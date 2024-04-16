@@ -7,10 +7,31 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='authorized_transaction_ids']"  position="after">
-                <button name="create_payment_sale" string="Asignar Pago" type="object"/>
+                
             </xpath>
+
+            <xpath expr="//header" position="replace" >
+
+                <header>
+                    <field name="authorized_transaction_ids" invisible="1"/>
+                    <button name="create_payment_sale" string="Asignar Pago" type="object" attrs="{'invisible': [('state', 'not in', ['sale'])]}" />
+                    <button name="action_confirm" id="action_confirm" data-hotkey="v" string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}" attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
+                    <button name="action_confirm" data-hotkey="v" string="Confirmar" type="object" context="{'validate_analytic': True}" attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                    <button name="action_cancel" type="object" string="Cancelar" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
+                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,payment"/>
+                </header>
+
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']"  position="after">
+                <field name="total_payments" />
+            </xpath>
+
+            
         </field>
     </record>
+
     
     
 
