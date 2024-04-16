@@ -20,7 +20,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Cuentas por pagar">
-                <field name="oprtunity_id"></field>
+                
+                <field name="oprtunity_id" invisible="1"></field>
                 <field name="contact_name"></field>
                 <field name="commission" widget="monetary" options="{'currency_field': 'company_currency'}"></field>
                 <field name="company_currency" invisible="1"/>
@@ -60,7 +61,8 @@
                               
                                 
                                 <tree string="Pagos Realizados">
-                                    <field name="accounts_payable_crm_id" />
+                                    <field name="name"></field>
+                                    <field name="accounts_payable_crm_id" invisible="1"/>
                                     <field name="company_currency" invisible="1"></field>
                                     <field name="catidad"  widget="monetary" options="{'currency_field': 'company_currency'}" />
                                     <field name="amount"  widget="monetary" options="{'currency_field': 'company_currency'}" />

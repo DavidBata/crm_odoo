@@ -45,15 +45,37 @@ class AccountsPaymenteRegisterCrm(models.Model):
         ondelete='restrict',
     )
 
-    @api.onchange('accounts_payable_crm_id')
+
+    
+    sale_order_id = fields.Many2one(
+        string='Orden de Venta',
+        comodel_name='sale.order',
+        ondelete='restrict',
+    )
+    
+    name = fields.Char(
+        string='name' , readonly=True)
+    
+    
+    is_payment_sale = fields.Boolean(
+        string='Pago de Venta',
+        default="False"
+    )
+    
+    @api.onchange('accounts_payable_crm_id','sale_order_id')
     def _onchange_importe_total(self):
         if self.accounts_payable_crm_id:
             object = self.env['account.payment.register.commission'].search([('accounts_payable_crm_id','=', self.accounts_payable_crm_id.id)])
             total_importe = sum(map(lambda p: p.amount, object))
             self.catidad = (self.accounts_payable_crm_id.commission - total_importe) if total_importe else self.accounts_payable_crm_id.commission
+        elif self.sale_order_id :
+            object = self.env['sale.order'].search([('id','=', self.sale_order_id.id)])
+            payment = self.env['account.payment.register.commission'].search([('sale_order_id','=', object.id)])
+            total_importe_pagado = sum(map(lambda p: p.amount, payment))
+            total_importe = sum(map(lambda p: p.amount_total, object))
+            
+            self.catidad = (total_importe- total_importe_pagado ) if total_importe_pagado else total_importe
     
-    
-  
     
     
     @api.depends('company_id')
@@ -64,4 +86,17 @@ class AccountsPaymenteRegisterCrm(models.Model):
             else:
                 rec.company_currency = rec.company_id.currency_id
     
-    
+    @api.model
+    def create(self, vals):
+        """Create Sequence"""
+        sequence_code = "payment.sale.order"
+        sequence_code_commission = "payment.commission"
+
+        if  vals["is_payment_sale"] == True:
+            vals["name"] = self.env["ir.sequence"].next_by_code(sequence_code)
+            return super(AccountsPaymenteRegisterCrm, self).create(vals)            
+        else:
+
+            vals["name"] = self.env["ir.sequence"].next_by_code(sequence_code_commission)
+            return super(AccountsPaymenteRegisterCrm, self).create(vals)
+
