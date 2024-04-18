@@ -16,8 +16,17 @@
             <xpath expr="//field[@name='stage_id']" 
             position="attributes"
             >
-                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">1</attribute>
             </xpath>
+
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <button string="Confirmar Oportunidad" name="confirmar_aoportunity" type="object" class="oe_highlight" 
+                attrs="{'invisible': [('state', '=','confirmado')]}"
+                />
+
+                <field name="state" widget="statusbar" readonly="1"/>
+            </xpath>
+            
             
             <xpath expr="//field[@name='email_from']" 
             position="attributes"

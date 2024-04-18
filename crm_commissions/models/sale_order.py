@@ -7,7 +7,7 @@ READONLY_FIELD_STATES = {
     state: [('readonly', True)]
     for state in {'sale', 'done', 'cancel','payment'}
 }
-class SaleOrderInherit(models.Model):
+class SagitleOrderInherit(models.Model):
     _inherit = 'sale.order'
 
     READONLY_FIELD_STATES = {

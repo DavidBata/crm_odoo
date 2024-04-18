@@ -39,6 +39,13 @@ class AccountsPayableCrm(models.Model):
         selection=[('no_payment', 'No Pagado'), ('payment', 'Pagado')],
         default="no_payment"
     )
+    
+    user_id = fields.Many2one(
+        string='Usuario',
+        comodel_name='res.users',
+        ondelete='restrict',
+    )
+    
 
     total_amount = fields.Float(
         string='Total Pagado',

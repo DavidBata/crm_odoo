@@ -22,24 +22,24 @@ class CrmLeadIherit(models.Model):
         default=lambda self: self.env.user.company_id
     )
     
-    def action_set_won_rainbowman(self):
-        self.register_account_payable()
-        self.ensure_one()
-        self.action_set_won()
-        message = self._get_rainbowman_message()
-        if message:
-            return {
-                'effect': {
-                    'fadeout': 'slow',
-                    'message': message,
-                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/img/smile.svg',
-                    'type': 'rainbow_man',
-                }
-            }
-        return True
+    
+    state = fields.Selection(
+        string='state',
+        selection=[('borrador', 'Borrador'), ('confirmado', 'confirmado')],
+        default='borrador',
+    )
+    
+    
+
+
+    def confirmar_aoportunity (self):
+        for rec in self:
+            if rec.commission > 0 and  rec.commission < rec.expected_revenue:
+                self.register_account_payable()
 
 
     def register_account_payable(self):
         x = self.env['accounts.payable.crm'].sudo().create({'oprtunity_id' : self.id,
-                                                        'contact_name' : self.name})
+                                                            'contact_name' : self.name,
+                                                            'user_id' : self.user_id.id})
         
