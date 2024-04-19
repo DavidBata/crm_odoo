@@ -35,8 +35,8 @@ class CrmLeadIherit(models.Model):
     def confirmar_aoportunity (self):
         for rec in self:
             if rec.commission > 0 and  rec.commission < rec.expected_revenue:
-                self.register_account_payable()
                 rec.state='confirmado'
+                self.register_account_payable()
 
 
     def register_account_payable(self):

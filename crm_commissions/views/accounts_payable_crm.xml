@@ -23,6 +23,7 @@
                 
                 <field name="oprtunity_id" invisible="1"></field>
                 <field name="contact_name"></field>
+                <field name ="user_id"></field>
                 <field name="commission" widget="monetary" options="{'currency_field': 'company_currency'}"></field>
                 <field name="company_currency" invisible="1"/>
                 <field name="total_amount"/>
